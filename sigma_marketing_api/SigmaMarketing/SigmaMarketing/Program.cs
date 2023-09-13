@@ -178,10 +178,17 @@ app.MapControllers();
 string configFile = "sigmaMarketingFirebase.json";
 string configFilePath = Path.Combine(AppContext.BaseDirectory, "Config", configFile);
 
-FirebaseApp.Create(new AppOptions()
+try
 {
-    Credential = GoogleCredential.FromFile(configFilePath),
-});
+    FirebaseApp.Create(new AppOptions()
+    {
+        Credential = GoogleCredential.FromFile(configFilePath),
+    });
+}
+catch (Exception ex)
+{
+    Console.WriteLine(ex.Message);
+}
 
 using (var scope = app.Services.CreateScope())
 {
