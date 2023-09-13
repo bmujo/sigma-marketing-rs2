@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "SigmaMarketing.Email": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

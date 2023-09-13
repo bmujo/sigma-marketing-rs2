@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33516.290
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SigmaMarketing.API", "SigmaMarketing\SigmaMarketing.API.csproj", "{0425200D-68E7-4BDA-AF9D-ECC37E1BDE93}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SigmaMarketing.Core", "SigmaMarketing.Core\SigmaMarketing.Core.csproj", "{B4CBA212-6E22-4EEC-8A67-1AB09CEAE752}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SigmaMarketing.Infrastructure", "SigmaMarketing.Infrastructure\SigmaMarketing.Infrastructure.csproj", "{005144A0-6167-4515-8075-39A2F40996A2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SigmaMarketing.Model", "SigmaMarketing.Model\SigmaMarketing.Model.csproj", "{EA7D32E1-5606-41BB-BE1E-46CD3B3D138D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SigmaMarketing.Email", "SigmaMarketing.Email\SigmaMarketing.Email.csproj", "{C55AFCFD-4035-4D13-90FF-6283632ABD0B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SigmaMarketing.Paypal", "SigmaMarketing.Paypal\SigmaMarketing.Paypal.csproj", "{8C1E1EA1-CCD4-414B-AA51-0C3172ED7DC4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0425200D-68E7-4BDA-AF9D-ECC37E1BDE93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0425200D-68E7-4BDA-AF9D-ECC37E1BDE93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0425200D-68E7-4BDA-AF9D-ECC37E1BDE93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0425200D-68E7-4BDA-AF9D-ECC37E1BDE93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4CBA212-6E22-4EEC-8A67-1AB09CEAE752}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4CBA212-6E22-4EEC-8A67-1AB09CEAE752}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4CBA212-6E22-4EEC-8A67-1AB09CEAE752}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4CBA212-6E22-4EEC-8A67-1AB09CEAE752}.Release|Any CPU.Build.0 = Release|Any CPU
+		{005144A0-6167-4515-8075-39A2F40996A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{005144A0-6167-4515-8075-39A2F40996A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{005144A0-6167-4515-8075-39A2F40996A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{005144A0-6167-4515-8075-39A2F40996A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA7D32E1-5606-41BB-BE1E-46CD3B3D138D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA7D32E1-5606-41BB-BE1E-46CD3B3D138D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA7D32E1-5606-41BB-BE1E-46CD3B3D138D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA7D32E1-5606-41BB-BE1E-46CD3B3D138D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C55AFCFD-4035-4D13-90FF-6283632ABD0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C55AFCFD-4035-4D13-90FF-6283632ABD0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C55AFCFD-4035-4D13-90FF-6283632ABD0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C55AFCFD-4035-4D13-90FF-6283632ABD0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C1E1EA1-CCD4-414B-AA51-0C3172ED7DC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C1E1EA1-CCD4-414B-AA51-0C3172ED7DC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C1E1EA1-CCD4-414B-AA51-0C3172ED7DC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C1E1EA1-CCD4-414B-AA51-0C3172ED7DC4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {43FC7823-1718-4EE8-88DE-9452B6BCA6C6}
+	EndGlobalSection
+EndGlobal

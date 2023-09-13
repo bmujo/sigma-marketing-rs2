@@ -1,0 +1,60 @@
+version: '4'
+services:
+  sigma-marketing-sql:
+    image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
+    restart: unless-stopped
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=QE9ruE5^&25sl
+      - MSSQL_PID=Developer
+      - MSSQL_TCP_PORT=1433
+      - MSSQL_FORCE_SSL_VERSION=1.2
+    ports:
+      - 1433:1433
+    networks:
+      - imnett
+    healthcheck:
+      test: [ "CMD", "/opt/mssql-tools/bin/sqlcmd", "-U", "sa", "-P", "QE9ruE5^&25sl", "-Q", "SELECT 1" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  sigma-marketing-api:
+    restart: unless-stopped
+    build:
+      context: .
+    environment:
+      - ConnectionStrings:DefaultConnection=Server=sigma-marketing-sql,1433;Database=210448;User=sa;Password=QE9ruE5^&25sl;ConnectRetryCount=0;Encrypt=False
+      - AppSettings:Key=jkHFoijklHVLpYICFVlkJKHYvLKHJKVCO
+      - AppSettings:Issuer=https://localhost:5000
+      - AppSettings:PaypalBaseUrl=https://api.sandbox.paypal.com
+      - AppSettings:PaypalClientId=ENTER_YOUR_PAYPAL_CLIENT_ID
+      - AppSettings:PaypalClientSecret=ENTER_YOUR_PAYPAL_CLIENT_SECRET
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - 5000:5050
+    networks:
+      - imnett
+    depends_on:
+      sigma-marketing-sql:
+        condition: service_healthy
+
+  sigma-marketing-email:
+    build:
+      context: .
+      dockerfile: Dockerfile.Email
+    restart: unless-stopped
+    environment:
+      - AppSettings:EmailFrom=ENTER_YOUR_EMAIL
+      - AppSettings:SmtpHost=smtp.gmail.com
+      - AppSettings:SmtpPort=465
+      - AppSettings:SmtpUser=ENTER_YOUR_EMAIL
+      - AppSettings:SmtpPass=ENTER_YOUR_EMAIL_PASSWORD
+    depends_on:
+      - sigma-marketing-api
+    networks:
+      - imnett
+
+networks:
+  imnett:
+    driver: bridge

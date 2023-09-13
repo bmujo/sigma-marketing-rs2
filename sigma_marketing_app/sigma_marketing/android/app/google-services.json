@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1007244741116",
+    "project_id": "sigma-marketing-demo",
+    "storage_bucket": "sigma-marketing-demo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1007244741116:android:7ffd9c8aa482335344ca79",
+        "android_client_info": {
+          "package_name": "com.example.sigma_marketing"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1007244741116-etr5qng9hgfl1knkkmcc4c83ci0gp6qo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDHFePX2AJ19ey2StOHd91KEh8p9j1KzXg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1007244741116-etr5qng9hgfl1knkkmcc4c83ci0gp6qo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
