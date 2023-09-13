@@ -567,8 +567,15 @@ namespace SigmaMarketing.Infrastructure.Services
         /// <param name="emailRequest"></param>
         private void SendEmail(EmailData emailRequest)
         {
-            using var bus = RabbitHutch.CreateBus("host=localhost");
-            bus.PubSub.Publish(emailRequest, "withdrawals");
+            try
+            {
+                using var bus = RabbitHutch.CreateBus("host=localhost");
+                bus.PubSub.Publish(emailRequest, "withdrawals");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         /// <summary>
