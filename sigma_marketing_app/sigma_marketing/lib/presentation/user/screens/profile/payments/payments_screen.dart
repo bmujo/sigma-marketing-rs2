@@ -46,24 +46,26 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
               return const Center(child: Text('failed to fetch payments'));
             case PaymentsUserStatus.success:
               if (state.paymentUser.payments.isEmpty) {
-                return Column(
-                  children: [
-                    _buildHeaderWithBalance(state.paymentUser.balance,
-                      state.paymentUser.paypalEmail),
-                    _buildPaypalEmailCard(state.paymentUser.paypalEmail),
-                    const SizedBox(height: 16),
-                    const Center(child: Text('no transactions')),
-                  ],
+                return SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      _buildHeaderWithBalance(state.paymentUser.balance,
+                          state.paymentUser.paypalEmail),
+                      _buildPaypalEmailCard(state.paymentUser.paypalEmail),
+                      const SizedBox(height: 16),
+                      const Center(child: Text('no transactions')),
+                    ],
+                  ),
                 );
               }
               return SingleChildScrollView(
                   child: Column(children: [
-                    _buildHeaderWithBalance(state.paymentUser.balance,
-                      state.paymentUser.paypalEmail),
-                    _buildPaypalEmailCard(state.paymentUser.paypalEmail),
-                    const SizedBox(height: 16),
-                    Transactions(payments: state.paymentUser.payments),
-                  ]));
+                _buildHeaderWithBalance(
+                    state.paymentUser.balance, state.paymentUser.paypalEmail),
+                _buildPaypalEmailCard(state.paymentUser.paypalEmail),
+                const SizedBox(height: 16),
+                Transactions(payments: state.paymentUser.payments),
+              ]));
             case PaymentsUserStatus.withdrawal:
               return _buildWithdrawRequested();
             case PaymentsUserStatus.withdrawalSuccess:
@@ -120,9 +122,11 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
           const SizedBox(height: 8),
           Text(email, style: style),
           const SizedBox(height: 8),
-          CustomButton(text: "Edit", onPressed: () {
-            _paypalEmailDialog(emailDialog);
-          }),
+          CustomButton(
+              text: "Edit",
+              onPressed: () {
+                _paypalEmailDialog(emailDialog);
+              }),
         ],
       ),
     );
@@ -140,27 +144,27 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
           title: Text("Paypal Email", style: CustomTextStyle.boldText(18)),
           content: SingleChildScrollView(
               child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CustomTextInput(
-                      labelText: "Enter email",
-                      hintText: "Enter your PayPal email address",
-                      controller: emailController,
-                      validator: (email) {
-                        if (emailController.text.isEmpty) {
-                          return "Please enter your PayPal email address";
-                        }
-                        return email;
-                      }),
-                ],
-              )),
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CustomTextInput(
+                  labelText: "Enter email",
+                  hintText: "Enter your PayPal email address",
+                  controller: emailController,
+                  validator: (email) {
+                    if (emailController.text.isEmpty) {
+                      return "Please enter your PayPal email address";
+                    }
+                    return email;
+                  }),
+            ],
+          )),
           actions: [
             CustomButton(
                 text: "Save",
                 onPressed: () {
-                  final paypalEmail = PaypalEmail(
-                      paypalEmail: emailController.text);
+                  final paypalEmail =
+                      PaypalEmail(paypalEmail: emailController.text);
                   _paymentsUserBloc.add(PaypalEmailUpdateEvent(paypalEmail));
                   Navigator.of(context).pop();
                 }),
@@ -267,14 +271,16 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                   )),
               CustomButton(
                   text: "Withdraw",
-                  onPressed: paypalEmail.isNotEmpty ? () {
-                    _withdrawDialog(balance);
-                  }: null),
+                  onPressed: paypalEmail.isNotEmpty
+                      ? () {
+                          _withdrawDialog(balance);
+                        }
+                      : null),
               const SizedBox(width: 8),
               Visibility(
                   visible: paypalEmail.isEmpty,
                   child: const Tooltip(
-                    triggerMode: TooltipTriggerMode.tap,
+                      triggerMode: TooltipTriggerMode.tap,
                       message: "Please add valid paypal email!",
                       child: Icon(Icons.warning_amber, size: 24))),
             ],
@@ -297,31 +303,31 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
           title: Text("Withdraw", style: CustomTextStyle.boldText(18)),
           content: SingleChildScrollView(
               child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Your Sigma Tokens will be converted to dollars \$ and sent to your PayPal account.",
-                    style: CustomTextStyle.regularText(16),
-                  ),
-                  const SizedBox(height: 16),
-                  Row(children: [
-                    Text("Current Balance: ${currentBalance.toString()}",
-                        style: CustomTextStyle.semiBoldText(16)),
-                    const SizedBox(width: 8),
-                    const Image(
-                        image: AssetImage("assets/sigma_token.png"),
-                        width: 24,
-                        height: 24),
-                  ]),
-                  const SizedBox(height: 16),
-                  CustomTextInput(
-                      labelText: "Enter amount",
-                      hintText: "Enter amount, minimum is 20",
-                      controller: amountController,
-                      validator: null),
-                ],
-              )),
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Your Sigma Tokens will be converted to dollars \$ and sent to your PayPal account.",
+                style: CustomTextStyle.regularText(16),
+              ),
+              const SizedBox(height: 16),
+              Row(children: [
+                Text("Current Balance: ${currentBalance.toString()}",
+                    style: CustomTextStyle.semiBoldText(16)),
+                const SizedBox(width: 8),
+                const Image(
+                    image: AssetImage("assets/sigma_token.png"),
+                    width: 24,
+                    height: 24),
+              ]),
+              const SizedBox(height: 16),
+              CustomTextInput(
+                  labelText: "Enter amount",
+                  hintText: "Enter amount, minimum is 20",
+                  controller: amountController,
+                  validator: null),
+            ],
+          )),
           actions: [
             CustomButton(
                 text: "Withdraw",
@@ -329,7 +335,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                   withdrawalAmount = int.parse(amountController.text);
                   if (withdrawalAmount >= 20) {
                     final withdraw =
-                    Withdraw(amount: withdrawalAmount, paypalEmail: "");
+                        Withdraw(amount: withdrawalAmount, paypalEmail: "");
                     _paymentsUserBloc.add(WithdrawalRequested(withdraw));
                     Navigator.of(context).pop();
                   } else {
