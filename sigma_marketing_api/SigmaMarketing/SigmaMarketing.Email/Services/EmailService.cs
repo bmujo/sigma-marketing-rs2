@@ -10,19 +10,22 @@ namespace SigmaMarketing.Email.Services
 {
     public class EmailService
     {
-        private readonly AppSettings _appSettings;
+        private string EmailFrom { get; set; }
+        private string SmtpHost { get; set; }
+        private int SmtpPort { get; set; }
+        private string SmtpUser { get; set; }
+        private string SmtpPass { get; set; }
 
-        public EmailService(Microsoft.Extensions.Configuration.IConfigurationRoot configuration)
+        public EmailService(AppSettings appSettings)
         {
-            _appSettings = new AppSettings();
-            _appSettings.EmailFrom = configuration.GetSection("AppSettings:EmailFrom").Value;
-            _appSettings.SmtpHost = configuration.GetSection("AppSettings:SmtpHost").Value;
-            _appSettings.SmtpPort = int.Parse(configuration.GetSection("AppSettings:SmtpPort").Value);
-            _appSettings.SmtpUser = configuration.GetSection("AppSettings:SmtpUser").Value;
-            _appSettings.SmtpPass = configuration.GetSection("AppSettings:SmtpPass").Value;
+            EmailFrom = appSettings.EmailFrom;
+            SmtpHost = appSettings.SmtpHost;
+            SmtpPort = appSettings.SmtpPort;
+            SmtpUser = appSettings.SmtpUser;
+            SmtpPass = appSettings.SmtpPass;
         }
 
-        public void sendWithdrawStatusEmail(EmailData emailRequest)
+        public void SendWithdrawStatusEmail(EmailData emailRequest)
         {
             // kreiraj racun u pdf formatu 
             string racunBody = string.Empty;
@@ -49,7 +52,7 @@ namespace SigmaMarketing.Email.Services
             var multipart = new Multipart("mixed");
             var textPart = new TextPart(TextFormat.Html)
             {
-                Text = generateWithdrawTemplate(),
+                Text = GenerateWithdrawTemplate(),
                 ContentTransferEncoding = ContentEncoding.Base64,
             };
             multipart.Add(textPart);
@@ -65,7 +68,7 @@ namespace SigmaMarketing.Email.Services
 
             // create email message
             var email = new MimeMessage();
-            email.From.Add(MailboxAddress.Parse(_appSettings.EmailFrom));
+            email.From.Add(MailboxAddress.Parse(EmailFrom));
             email.To.Add(MailboxAddress.Parse(emailRequest.Email));
             email.Subject = "Sima Marketing - Withdraw information";
             email.Body = multipart;
@@ -73,13 +76,13 @@ namespace SigmaMarketing.Email.Services
             // send email
             using var smtp = new SmtpClient();
 
-            smtp.Connect(_appSettings.SmtpHost, _appSettings.SmtpPort, true);
-            smtp.Authenticate(_appSettings.SmtpUser, _appSettings.SmtpPass);
+            smtp.Connect(SmtpHost, SmtpPort, true);
+            smtp.Authenticate(SmtpUser, SmtpPass);
             smtp.Send(email);
             smtp.Disconnect(true);
         }
 
-        private string generateWithdrawTemplate()
+        private string GenerateWithdrawTemplate()
         {
             string body = string.Empty;
             using (StreamReader reader = new StreamReader("Helper/EmailTemplates/withdraw.html"))

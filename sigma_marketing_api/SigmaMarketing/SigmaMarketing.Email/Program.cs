@@ -1,5 +1,6 @@
 ﻿using EasyNetQ;
 using Microsoft.Extensions.Configuration;
+using SigmaMarketing.Email.Helper;
 using SigmaMarketing.Email.Model;
 using SigmaMarketing.Email.Services;
 
@@ -14,11 +15,16 @@ class Program
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
             .Build();
 
-        var emailService = new EmailService(configuration);
+        var appSettings = new AppSettings(configuration);
+
+        var emailService = new EmailService(appSettings);
 
         try
         {
-            using (var bus = RabbitHutch.CreateBus("host=localhost"))
+            var host = appSettings.EmailMicroserviceConnectionString;
+            var port = appSettings.EmailMicroservicePort;
+
+            using (var bus = RabbitHutch.CreateBus($"host={host};port={port}"))
             {
                 bus.PubSub.Subscribe<EmailData>("withdrawals", SendEmail);
 
@@ -28,7 +34,7 @@ class Program
 
             void SendEmail(EmailData emailRequest)
             {
-                emailService.sendWithdrawStatusEmail(emailRequest);
+                emailService.SendWithdrawStatusEmail(emailRequest);
 
                 Console.WriteLine(" [x] Received {0}", emailRequest);
                 Console.WriteLine(" [x] Received {0}", emailRequest.Email);

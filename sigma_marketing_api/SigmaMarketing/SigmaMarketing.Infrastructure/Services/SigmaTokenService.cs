@@ -25,6 +25,9 @@ namespace SigmaMarketing.Infrastructure.Services
         private readonly ICampaignCompanyService _campaignCompanyService;
         private readonly INotificationService _notificationService;
 
+        private string EmailMicroserviceConnectionString = "";
+        private string EmailMicroservicePort = "";
+
         public SigmaTokenService(
             ApplicationDbContext context, 
             IUserContextService userContextService, 
@@ -36,6 +39,9 @@ namespace SigmaMarketing.Infrastructure.Services
             string baseUrl = appSettings.Value.PaypalBaseUrl;
             string clientId = appSettings.Value.PaypalClientId;
             string clientSecret = appSettings.Value.PaypalClientSecret;
+
+            EmailMicroserviceConnectionString = appSettings.Value.EmailMicroserviceConnectionString;
+            EmailMicroservicePort = appSettings.Value.EmailMicroservicePort;
 
             _paypalClientApi = new PaypalClientApi(baseUrl, clientId, clientSecret);
             _context = context;
@@ -567,9 +573,11 @@ namespace SigmaMarketing.Infrastructure.Services
         /// <param name="emailRequest"></param>
         private void SendEmail(EmailData emailRequest)
         {
+            var host = EmailMicroserviceConnectionString;
+            var port = EmailMicroservicePort;
             try
             {
-                using var bus = RabbitHutch.CreateBus("host=localhost");
+                using var bus = RabbitHutch.CreateBus($"host={host};port={port}");
                 bus.PubSub.Publish(emailRequest, "withdrawals");
             }
             catch (Exception ex)

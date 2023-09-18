@@ -40,7 +40,8 @@ builder.Services.AddSwaggerGen(c =>
         BearerFormat = "JWT",
         Scheme = "bearer"
     });
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    c.AddSecurityRequirement(
+        new OpenApiSecurityRequirement
                 {
                     {
                         new OpenApiSecurityScheme
@@ -56,10 +57,10 @@ builder.Services.AddSwaggerGen(c =>
                 });
 });
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-}, ServiceLifetime.Transient);
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    {
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    }, ServiceLifetime.Transient);
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole<int>>()
     .AddEntityFrameworkStores<ApplicationDbContext>()

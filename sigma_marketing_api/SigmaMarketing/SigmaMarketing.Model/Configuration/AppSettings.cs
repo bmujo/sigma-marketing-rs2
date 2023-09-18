@@ -7,5 +7,8 @@
         public string PaypalBaseUrl { get; set; }
         public string PaypalClientId { get; set; }
         public string PaypalClientSecret { get; set; }
+
+        public string EmailMicroserviceConnectionString { get; set; }
+        public string EmailMicroservicePort { get; set; }
     }
 }
