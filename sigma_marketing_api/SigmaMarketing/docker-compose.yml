@@ -30,6 +30,8 @@ services:
       - AppSettings:PaypalBaseUrl=https://api.sandbox.paypal.com
       - AppSettings:PaypalClientId=ENTER_YOUR_PAYPAL_CLIENT_ID
       - AppSettings:PaypalClientSecret=ENTER_YOUR_PAYPAL_CLIENT_SECRET
+      - AppSettings:EmailMicroserviceConnectionString=localhost
+      - AppSettings:EmailMicroservicePort=5672
       - ASPNETCORE_ENVIRONMENT=Development
     ports:
       - 5000:5050
@@ -50,6 +52,8 @@ services:
       - AppSettings:SmtpPort=465
       - AppSettings:SmtpUser=ENTER_YOUR_EMAIL
       - AppSettings:SmtpPass=ENTER_YOUR_EMAIL_PASSWORD
+      - AppSettings:EmailMicroserviceConnectionString=localhost
+      - AppSettings:EmailMicroservicePort=5672
     depends_on:
       - sigma-marketing-api
     networks:
