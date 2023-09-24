@@ -1,50 +1,57 @@
-﻿using EasyNetQ;
-using Microsoft.Extensions.Configuration;
-using SigmaMarketing.Email.Helper;
-using SigmaMarketing.Email.Model;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using SigmaMarketing.Email.Services;
+using Serilog;
+using SigmaMarketing.Email.Configuration;
+using SigmaMarketing.Email.RabbitMqManager;
 
-class Program
+namespace SigmaMarketing.Email;
+
+public class Program
 {
-    static void Main(string[] args)
+    public static void Main(string[] args)
     {
-        Console.WriteLine("Sigma Marketing Email");
+        CreateHostBuilder(args).Build().Run();
+    }
 
-        var configuration = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .Build();
-
-        var appSettings = new AppSettings(configuration);
-
-        var emailService = new EmailService(appSettings);
-
-        try
-        {
-            var host = appSettings.EmailMicroserviceConnectionString;
-            var port = appSettings.EmailMicroservicePort;
-
-            using (var bus = RabbitHutch.CreateBus($"host={host};port={port}"))
+    public static IHostBuilder CreateHostBuilder(string[] args)
+    {
+        return Host.CreateDefaultBuilder(args)
+            .ConfigureLogging(logging =>
             {
-                bus.PubSub.Subscribe<EmailData>("withdrawals", SendEmail);
-
-                Console.WriteLine(" Press [enter] to exit.");
-                Console.ReadLine();
-            }
-
-            void SendEmail(EmailData emailRequest)
+                logging.ClearProviders();
+            })
+            .UseSerilog((hostContext, loggerConfiguration) =>
             {
-                emailService.SendWithdrawStatusEmail(emailRequest);
+                loggerConfiguration.ReadFrom
+                .Configuration(hostContext.Configuration)
+                .WriteTo.Console();
+            })
+            .ConfigureAppConfiguration((hostContext, builder) =>
+            {
+                builder.Sources.Clear();
+                var env = hostContext.HostingEnvironment;
+                var envName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
-                Console.WriteLine(" [x] Received {0}", emailRequest);
-                Console.WriteLine(" [x] Received {0}", emailRequest.Email);
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Error creating!");
-            Console.WriteLine(ex.Message);
-            Console.ReadLine();
-        }
+                builder.SetBasePath(Directory.GetCurrentDirectory());
+                builder.AddJsonFile($"appsettings.{envName}.json", optional: false, reloadOnChange: true);
+                builder.AddEnvironmentVariables();
+            })
+            .ConfigureServices((hostContext, services) =>
+            {
+                services.Configure<AppSettings>(hostContext.Configuration.GetSection("AppSettings"));
+                services.Configure<RabbitMq>(hostContext.Configuration.GetSection("RabbitMq"));
+
+                services.AddSingleton(provider =>
+                {
+                    var rabbitMqConnectionString = hostContext.Configuration.GetValue<string>("RabbitMq:ConnectionString");
+                    return new RabbitManager(rabbitMqConnectionString);
+                });
+
+                services.AddScoped<IEmailService, EmailService>();
+                services.AddHostedService<Worker>();
+            });
     }
 }

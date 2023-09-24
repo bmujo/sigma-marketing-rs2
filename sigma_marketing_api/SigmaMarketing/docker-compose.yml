@@ -30,8 +30,7 @@ services:
       - AppSettings:PaypalBaseUrl=https://api.sandbox.paypal.com
       - AppSettings:PaypalClientId=ENTER_YOUR_PAYPAL_CLIENT_ID
       - AppSettings:PaypalClientSecret=ENTER_YOUR_PAYPAL_CLIENT_SECRET
-      - AppSettings:EmailMicroserviceConnectionString=localhost
-      - AppSettings:EmailMicroservicePort=5672
+      - AppSettings:EmailMicroserviceConnectionString=host=rabbit-email;port=5672;virtualHost=/;username=goat;password=goat;requestedHeartbeat=10
       - ASPNETCORE_ENVIRONMENT=Development
     ports:
       - 5000:5050
@@ -40,6 +39,20 @@ services:
     depends_on:
       sigma-marketing-sql:
         condition: service_healthy
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    restart: unless-stopped  
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    container_name: rabbit-email
+    hostname: rabbit-email
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - imnett
 
   sigma-marketing-email:
     build:
@@ -52,12 +65,15 @@ services:
       - AppSettings:SmtpPort=465
       - AppSettings:SmtpUser=ENTER_YOUR_EMAIL
       - AppSettings:SmtpPass=ENTER_YOUR_EMAIL_PASSWORD
-      - AppSettings:EmailMicroserviceConnectionString=localhost
-      - AppSettings:EmailMicroservicePort=5672
-    depends_on:
-      - sigma-marketing-api
+      - RabbitMq:ConnectionString=host=rabbit-email;port=5672;virtualHost=/;username=goat;password=goat;requestedHeartbeat=10
+      - RabbitMq:SubscriptionId=withdrawals
+      - ASPNETCORE_ENVIRONMENT=Development
     networks:
       - imnett
+    depends_on:
+      - rabbitmq
+    links: 
+      - rabbitmq
 
 networks:
   imnett:

@@ -5,25 +5,28 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import '../firebase_options.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-FlutterLocalNotificationsPlugin();
+    FlutterLocalNotificationsPlugin();
 
 Future<void> initMobilePushNotifications() async {
-  final AndroidInitializationSettings initializationSettingsAndroid =
-  AndroidInitializationSettings('@mipmap/ic_launcher');
+  if (String.fromEnvironment('firebaseAndroidApiKey').isNotEmpty) {
+    final AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
 
-  final InitializationSettings initializationSettings = InitializationSettings(
-    android: initializationSettingsAndroid,
-  );
+    final InitializationSettings initializationSettings =
+        InitializationSettings(
+      android: initializationSettingsAndroid,
+    );
 
-  await flutterLocalNotificationsPlugin.initialize(
-    initializationSettings,
-  );
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+    );
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
 
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  }
 }
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -32,10 +35,11 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 Future<void> _showHighPriorityNotification(RemoteMessage message) async {
   final notificationTitle = message.notification?.title ?? 'New message';
-  final notificationBody = message.notification?.body ?? 'You have new messages!';
+  final notificationBody =
+      message.notification?.body ?? 'You have new messages!';
 
   const AndroidNotificationDetails androidPlatformChannelSpecifics =
-  AndroidNotificationDetails(
+      AndroidNotificationDetails(
     'sm_channel',
     'SM Channel',
     importance: Importance.high,
@@ -43,7 +47,7 @@ Future<void> _showHighPriorityNotification(RemoteMessage message) async {
   );
 
   const NotificationDetails platformChannelSpecifics =
-  NotificationDetails(android: androidPlatformChannelSpecifics);
+      NotificationDetails(android: androidPlatformChannelSpecifics);
 
   await flutterLocalNotificationsPlugin.show(
     0,

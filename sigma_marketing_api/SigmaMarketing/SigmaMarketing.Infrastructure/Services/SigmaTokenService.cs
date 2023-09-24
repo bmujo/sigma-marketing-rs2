@@ -26,7 +26,6 @@ namespace SigmaMarketing.Infrastructure.Services
         private readonly INotificationService _notificationService;
 
         private string EmailMicroserviceConnectionString = "";
-        private string EmailMicroservicePort = "";
 
         public SigmaTokenService(
             ApplicationDbContext context, 
@@ -41,7 +40,6 @@ namespace SigmaMarketing.Infrastructure.Services
             string clientSecret = appSettings.Value.PaypalClientSecret;
 
             EmailMicroserviceConnectionString = appSettings.Value.EmailMicroserviceConnectionString;
-            EmailMicroservicePort = appSettings.Value.EmailMicroservicePort;
 
             _paypalClientApi = new PaypalClientApi(baseUrl, clientId, clientSecret);
             _context = context;
@@ -275,13 +273,13 @@ namespace SigmaMarketing.Infrastructure.Services
 
                 var emailRequest = new EmailData
                 {
-                    Email = "mujo.behric@outlook.com",
+                    Email = user.Email,
                     Subject = "Withdrawal",
                     Amount = withdrawRequest.Amount,
                     SigmaAmount = withdrawRequest.Amount,
                 };
 
-                SendEmail(emailRequest);
+                SendEmailAsync(emailRequest);
 
                 return true;
             }
@@ -568,20 +566,30 @@ namespace SigmaMarketing.Infrastructure.Services
 
 
         /// <summary>
-        /// Private method for sending email via RabbitMQ
+        /// Private method for sending email via RabbitMQ asynchronously
         /// </summary>
         /// <param name="emailRequest"></param>
-        private void SendEmail(EmailData emailRequest)
+        private void SendEmailAsync(EmailData emailRequest)
         {
-            var host = EmailMicroserviceConnectionString;
-            var port = EmailMicroservicePort;
+            Console.WriteLine("Email Service Connection String " + EmailMicroserviceConnectionString);
             try
             {
-                using var bus = RabbitHutch.CreateBus($"host={host};port={port}");
+                using var bus = RabbitHutch.CreateBus(EmailMicroserviceConnectionString);
                 bus.PubSub.Publish(emailRequest, "withdrawals");
+            }
+            catch (TimeoutException ex)
+            {
+                Console.WriteLine("Timeout Sending Email!");
+                Console.WriteLine(ex.Message);
+            }
+            catch (TaskCanceledException ex)
+            {
+                Console.WriteLine("Task canceled Sending Email!");
+                Console.WriteLine(ex.Message);
             }
             catch (Exception ex)
             {
+                Console.WriteLine("Exception Sending Email!");
                 Console.WriteLine(ex.Message);
             }
         }

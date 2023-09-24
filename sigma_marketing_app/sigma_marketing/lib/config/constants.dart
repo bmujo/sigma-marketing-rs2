@@ -1,8 +1,8 @@
 abstract class AppConstants {
   // Default base URL
-  static const defaultBaseUrl = "http://localhost:5000/";
+  //static const defaultBaseUrl = "http://localhost:5000/";
 
-  // static const defaultBaseUrl = "http://10.0.2.2:5000/";
+  static const defaultBaseUrl = "https://10.0.2.2:5000/";
 
   // Suffixes
   static const String suffix = "api/";

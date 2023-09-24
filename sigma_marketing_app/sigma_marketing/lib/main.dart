@@ -20,9 +20,9 @@ void main(List<String> args) async {
 
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
-  if (Platform.isAndroid || Platform.isIOS) {
-    await initMobilePushNotifications();
-  }
+  // if (Platform.isAndroid || Platform.isIOS) {
+  //   await initMobilePushNotifications();
+  // }
 
   return runApp(const App());
 }
