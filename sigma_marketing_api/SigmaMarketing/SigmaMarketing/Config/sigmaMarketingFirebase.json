@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "ENTER_PROJECT_NAME",
+  "private_key_id": "ENTER_PRIVATE_KEY_ID",
+  "private_key": "ENTER_PRIVATE_KEY",
+  "client_email": "ENTER_CLIENT_EMAIL",
+  "client_id": "ENTER_CLIENT_ID",
+  "auth_uri": "ENTER_AUTH_URI",
+  "token_uri": "ENTER_TOKEN_URI",
+  "auth_provider_x509_cert_url": "ENTER_AUTH_PROVIDER_CERT_URL",
+  "client_x509_cert_url": "ENTER_CLIENT_CERT_URL",
+  "universe_domain": "googleapis.com"
+}
