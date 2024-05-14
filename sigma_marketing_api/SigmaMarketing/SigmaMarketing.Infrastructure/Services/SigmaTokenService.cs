@@ -26,6 +26,7 @@ namespace SigmaMarketing.Infrastructure.Services
         private readonly INotificationService _notificationService;
 
         private string EmailMicroserviceConnectionString = "";
+        private string SubscriptionId = "";
 
         public SigmaTokenService(
             ApplicationDbContext context, 
@@ -40,6 +41,7 @@ namespace SigmaMarketing.Infrastructure.Services
             string clientSecret = appSettings.Value.PaypalClientSecret;
 
             EmailMicroserviceConnectionString = appSettings.Value.EmailMicroserviceConnectionString;
+            SubscriptionId = appSettings.Value.SubscriptionId;
 
             _paypalClientApi = new PaypalClientApi(baseUrl, clientId, clientSecret);
             _context = context;
@@ -569,13 +571,13 @@ namespace SigmaMarketing.Infrastructure.Services
         /// Private method for sending email via RabbitMQ asynchronously
         /// </summary>
         /// <param name="emailRequest"></param>
-        private void SendEmailAsync(EmailData emailRequest)
+        private async Task SendEmailAsync(EmailData emailRequest)
         {
             Console.WriteLine("Email Service Connection String " + EmailMicroserviceConnectionString);
             try
             {
                 using var bus = RabbitHutch.CreateBus(EmailMicroserviceConnectionString);
-                bus.PubSub.Publish(emailRequest, "withdrawals");
+                await Task.Run(() => bus.PubSub.Publish(emailRequest, "withdrawals"));
             }
             catch (TimeoutException ex)
             {

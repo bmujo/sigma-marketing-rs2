@@ -9,5 +9,6 @@
         public string PaypalClientSecret { get; set; }
 
         public string EmailMicroserviceConnectionString { get; set; }
+        public string SubscriptionId { get; set; }
     }
 }
