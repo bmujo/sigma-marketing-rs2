@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+//import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../../data/repositories/authentication/authentication_repository.dart';
@@ -79,7 +79,8 @@ class AuthenticationBloc
 
   Future<bool> saveNotificationToken() async {
     try {
-      String token = await FirebaseMessaging.instance.getToken() ?? "";
+      //String token = await FirebaseMessaging.instance.getToken() ?? "";
+      String token = "";
 
       bool isTokenSaved = await _repository.saveNotificationToken(token);
       return isTokenSaved;

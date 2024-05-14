@@ -253,7 +253,7 @@ class _AddPhotosState extends State<AddPhotos> {
                   alignment: Alignment.topRight,
                   child: Text(
                     '$offset',
-                    style: Theme.of(context).textTheme.bodyText1,
+                    style: Theme.of(context).textTheme.bodyLarge,
                   ),
                 ),
               Visibility(
