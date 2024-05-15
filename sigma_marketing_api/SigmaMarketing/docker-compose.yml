@@ -31,6 +31,7 @@ services:
       - AppSettings:PaypalClientId=ENTER_YOUR_PAYPAL_CLIENT_ID
       - AppSettings:PaypalClientSecret=ENTER_YOUR_PAYPAL_CLIENT_SECRET
       - AppSettings:EmailMicroserviceConnectionString=host=rabbit-email;port=5672;virtualHost=/;username=goat;password=goat;requestedHeartbeat=10
+      - AppSettings:SubscriptionId=withdrawals
       - ASPNETCORE_ENVIRONMENT=Development
     ports:
       - 5000:5050
